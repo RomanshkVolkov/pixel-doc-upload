@@ -30,11 +30,8 @@ export default function MapFrame() {
          const selectedArea = document.querySelector(
             '.ReactCrop__crop-selection'
          ) as HTMLElement;
-         console.log('selected area crop');
-         console.log(selectedArea);
          reader.onload = (e) => {
             const b64 = e.target?.result;
-            console.log('b64');
             if (selectedArea) {
                selectedArea.style.backgroundImage = `url(${b64})`;
                selectedArea.style.backgroundSize = 'cover';
