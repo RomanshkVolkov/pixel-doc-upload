@@ -8,6 +8,9 @@ dependencies:
   '@nextui-org/react':
     specifier: ^2.3.6
     version: 2.3.6(@types/react@18.3.2)(framer-motion@11.1.9)(react-dom@18.3.1)(react@18.3.1)(tailwind-variants@0.2.1)(tailwindcss@3.4.3)
+  '@qiuz/react-image-map':
+    specifier: ^1.1.8
+    version: 1.1.8
   framer-motion:
     specifier: ^11.1.9
     version: 11.1.9(react-dom@18.3.1)(react@18.3.1)
@@ -26,6 +29,9 @@ dependencies:
   react-icons:
     specifier: ^5.2.1
     version: 5.2.1(react@18.3.1)
+  react-image-crop:
+    specifier: ^11.0.5
+    version: 11.0.5(react@18.3.1)
   sharp:
     specifier: ^0.33.3
     version: 0.33.3
@@ -1932,6 +1938,13 @@ packages:
     engines: {node: '>=14'}
     requiresBuild: true
     optional: true
+
+  /@qiuz/react-image-map@1.1.8:
+    resolution: {integrity: sha512-8uOUF5VLFmcCuPpEtkZD2sr7gCe0U1u2yKRmxs3kO9C+KC4RS3ebi4loAO8bXnO2+PwarxoVCXiGq8zggn1b+g==}
+    dependencies:
+      react: 16.14.0
+      react-dom: 16.14.0(react@16.14.0)
+    dev: false
 
   /@react-aria/breadcrumbs@3.5.12(react@18.3.1):
     resolution: {integrity: sha512-UHTVe6kA73xbE1J6LLVjUooEQvTJ4vWPRyOxu4t3dZ/4dMttvHxpKylvj4z606wioSGVhCDEKC4Vn+RtQLypeA==}
@@ -4988,7 +5001,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-    dev: true
 
   /punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
@@ -4997,6 +5009,18 @@ packages:
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  /react-dom@16.14.0(react@16.14.0):
+    resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}
+    peerDependencies:
+      react: ^16.14.0
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.8.1
+      react: 16.14.0
+      scheduler: 0.19.1
+    dev: false
 
   /react-dom@18.3.1(react@18.3.1):
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
@@ -5016,9 +5040,16 @@ packages:
       react: 18.3.1
     dev: false
 
+  /react-image-crop@11.0.5(react@18.3.1):
+    resolution: {integrity: sha512-A/Y/kspOzki1zDL/bSgwWIY1X3CQ9F1QwpdnncWLBVAktnKfAZDIQnWmjXzuzEjZHDMsBlArytIcPBVi6DNklg==}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      react: 18.3.1
+    dev: false
+
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-    dev: true
 
   /react-remove-scroll-bar@2.3.6(@types/react@18.3.2)(react@18.3.1):
     resolution: {integrity: sha512-DtSYaao4mBmX+HDo5YWYdBWQwYIQQshUV/dVxFxK+KM26Wjwp1gZ6rv6OC3oujI6Bfu6Xyg3TwK533AQutsn/g==}
@@ -5084,6 +5115,15 @@ packages:
       use-latest: 1.2.1(@types/react@18.3.2)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /react@16.14.0:
+    resolution: {integrity: sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.8.1
     dev: false
 
   /react@18.3.1:
@@ -5190,6 +5230,13 @@ packages:
       es-errors: 1.3.0
       is-regex: 1.1.4
     dev: true
+
+  /scheduler@0.19.1:
+    resolution: {integrity: sha512-n/zwRWRYSUj0/3g/otKDRPMh6qv2SYMWNq85IEa8iZyAv8od9zDYpGSnpBEjNgcMNq6Scbu5KfIPxNF72R/2EA==}
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+    dev: false
 
   /scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}

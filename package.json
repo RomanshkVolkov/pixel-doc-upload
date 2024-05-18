@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.3.6",
+    "@qiuz/react-image-map": "^1.1.8",
     "framer-motion": "^11.1.9",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
+    "react-image-crop": "^11.0.5",
     "sharp": "^0.33.3"
   },
   "devDependencies": {

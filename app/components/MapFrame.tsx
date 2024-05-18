@@ -1,81 +1,81 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Cell from './Cell';
 import { Image, Input } from '@nextui-org/react';
-import { useSearchParams } from 'next/navigation';
+import ReactCrop, { PixelCrop, type Crop } from 'react-image-crop';
+import { MdFileUpload } from 'react-icons/md';
+import { UrlObject } from 'url';
 
 export default function MapFrame() {
-   const [currentCell, setCurrentCell] = useState<string>('');
-   const [startSelected, setStartSelected] = useState<string>('');
-   const [endSelected, setEndSelected] = useState<string>('');
+   const [crop, setCrop] = useState<Crop>();
+   const [image, setImage] = useState<UrlObject>();
 
-   const handleSelectWithHref = (x: number, y: number) => {
-      return `?x=${x}&y=${y}`;
-   };
-   const width = 1000;
-   const height = 1000;
+   const size = 1000;
    const pixel = 10;
-   const rows = height / pixel;
-   const cols = width / pixel;
-
-   const handler = {
-      current: {
-         value: currentCell,
-         set: setCurrentCell,
-      },
-      start: {
-         value: startSelected,
-         set: setStartSelected,
-      },
-      end: {
-         value: endSelected,
-         set: setEndSelected,
-      },
+   const handleChangeCrop = (c: Crop) => {
+      const { width: w, height: h, x: x1, y: y1, ...crop } = c;
+      const step = 10;
+      const x = Math.floor(x1 / step) * step;
+      const y = Math.floor(y1 / step) * step;
+      const width = Math.ceil(w / step) * step;
+      const height = Math.ceil(h / step) * step;
+      setCrop({ ...crop, x, y, width, height });
    };
 
+   const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+         //make url object
+         const reader = new FileReader();
+         const selectedArea = document.querySelector(
+            '.ReactCrop__crop-selection'
+         ) as HTMLElement;
+         console.log('selected area crop');
+         console.log(selectedArea);
+         reader.onload = (e) => {
+            const b64 = e.target?.result;
+            console.log('b64');
+            if (selectedArea) {
+               selectedArea.style.backgroundImage = `url(${b64})`;
+               selectedArea.style.backgroundSize = 'cover';
+               selectedArea.style.backgroundPosition = 'center';
+               selectedArea.style.animation = 'none';
+            }
+         };
+         reader.readAsDataURL(file);
+      }
+   };
    return (
       <>
-         <div className="w-full mb-10 px-32">
-            <div className="grid grid-cols-4 gap-4 ">
-               <Input type="text" placeholder="x" value={startSelected} />
-               <Input type="text" placeholder="y" value={endSelected} />
-               <Input type="number" placeholder="width" />
-               <Input type="number" placeholder="height" />
+         <div className="flex justify-center bg-background-100">
+            <div className="fixed bottom-0 right-10">
+               <Input
+                  defaultValue={null as any}
+                  value={null as any}
+                  data-slot="start"
+                  type="file"
+                  startContent={<MdFileUpload />}
+                  className="p-4"
+                  accept="image/*"
+                  onChange={handleUploadImage}
+               />
             </div>
+            <ReactCrop
+               crop={crop}
+               onChange={handleChangeCrop}
+               minWidth={pixel}
+               minHeight={pixel}>
+               <Image
+                  src="/images/pixel-dog.png"
+                  width={`${size}px`}
+                  height={`${size}px`}
+                  alt="Pixel Dog"
+                  classNames={{ img: 'inline-block z-1' }}
+                  removeWrapper
+                  radius="none"
+               />
+            </ReactCrop>
          </div>
-         <Image
-            src="/images/pixel-dog.png"
-            className="pixel-image"
-            useMap="#pixel-area"
-            width={1000}
-            height={1000}
-            alt="pixel-dog"
-         />
-         <map id="pixel-area" name="pixel-area">
-            <div className="w-full flex justify-center absolute bg-background z-50 top-[-20px]">
-               {currentCell}
-            </div>
-            {Array.from({ length: rows }, (_, row) =>
-               Array.from({ length: cols }, (_, col) => {
-                  const x1 = row * pixel;
-                  const y1 = col * pixel;
-                  const x2 = x1 + pixel;
-                  const y2 = y1 + pixel;
-                  return (
-                     <Cell
-                        handler={handler}
-                        key={`${row}-${col}`}
-                        shape="rect"
-                        coords={[x1, y1, x2, y2].join(',')}
-                        size={pixel}
-                        href={'#'}
-                        alt="pixel"
-                     />
-                  );
-               })
-            )}
-         </map>
       </>
    );
 }

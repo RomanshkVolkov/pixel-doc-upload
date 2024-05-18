@@ -1,6 +1,6 @@
 'use client';
-import { Tooltip } from '@nextui-org/react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
+
 interface CellHandlerOption {
    value: string;
    set: Dispatch<SetStateAction<string>>;
@@ -20,83 +20,64 @@ interface Props {
 
 export default function Cell(props: Props) {
    const { handler, shape, coords, href, size, alt } = props;
-   const [x, y] = coords.split(',');
+   const [x1, y1, x2, y2] = coords.split(',').map(Number); // Convert to numbers
 
-   const handleSelected = (e: any) => {
-      const target = e.target as HTMLElement;
-      const area = document.getElementById('pixel-area');
-      const selected = document.querySelectorAll('.selected');
+   const handleSelected = (e: React.MouseEvent<HTMLAreaElement>) => {
+      e.preventDefault();
 
-      target.classList.toggle('selected');
-      if (selected.length >= 2) {
-         selected.forEach((item) => {
-            item.classList.remove('selected');
-         });
-      } else if (selected.length === 1 && target.classList.contains('selected')) {
-         const startArea = selected[0].previousElementSibling;
-         const endArea = target.previousElementSibling;
-         if (startArea && endArea) {
-            const startCoords = startArea.getAttribute('coords');
-            const endCoords = endArea.getAttribute('coords');
-            if (!startCoords || !endCoords) return;
-            const [startX, startY] = startCoords.split(',');
-            const [endX, endY] = endCoords.split(',');
-            handler.start.set(`${startX},${startY}`);
-            const x = Math.min(parseInt(startX), parseInt(endX));
-            const y = Math.min(parseInt(startY), parseInt(endY));
-            const width = Math.abs(parseInt(startX) - parseInt(endX));
-            const height = Math.abs(parseInt(startY) - parseInt(endY));
-            const cells = document.querySelectorAll('.pixel-cell');
-            cells.forEach((cell) => {
-               const cellX = parseInt(cell.getAttribute('x') || '');
-               const cellY = parseInt(cell.getAttribute('y') || '');
-               if (
-                  cellX >= x &&
-                  cellX <= x + width &&
-                  cellY >= y &&
-                  cellY <= y + height
-               ) {
-                  cell.classList.add('selected');
-               }
-            });
-            const imgBg = document.createElement('div');
-            imgBg.classList.add('img-bg');
-            imgBg.style.top = `${y}px`;
-            imgBg.style.left = `${x}px`;
-            imgBg.style.width = `${width}px`;
-            imgBg.style.height = `${height}px`;
+      const { start, end } = handler;
+      const [startX, startY] = start.value.split(',').map(Number);
+      const [endX, endY] = end.value.split(',').map(Number);
 
-            const img = document.createElement('img');
-            img.src = '/images/background.webp';
-
-            imgBg.appendChild(img);
-            area!.appendChild(imgBg);
-         }
+      if (!start.value) {
+         start.set(`${x1},${y1}`);
+      } else if (!end.value) {
+         end.set(`${x1},${y1}`);
+         updateSelectedArea();
+      } else {
+         start.set(`${x1},${y1}`);
+         end.set('');
+         resetSelectedArea();
       }
    };
 
+   const updateSelectedArea = () => {
+      const selectedArea = document.getElementById('selected-area');
+      if (selectedArea) {
+         const left = handler.start.value.split(',')[0];
+         const top = handler.start.value.split(',')[1];
+         const width = Math.abs(x1 - Number(handler.end.value.split(',')[0]));
+         const height = Math.abs(y1 - Number(handler.end.value.split(',')[1]));
+
+         selectedArea.style.left = `${left}px`;
+         selectedArea.style.top = `${top}px`;
+         selectedArea.style.width = `${width}px`;
+         selectedArea.style.height = `${height}px`;
+      }
+   };
+
+   const resetSelectedArea = () => {
+      const selectedArea = document.getElementById('selected-area');
+      if (selectedArea) {
+         selectedArea.style.width = '0px';
+         selectedArea.style.height = '0px';
+      }
+   };
+
+   useEffect(() => {
+      if (handler.end.value) {
+         updateSelectedArea();
+      }
+   }, [handler.end.value]); // Update whenever end value changes
+
    return (
-      <>
-         <area
-            shape={shape}
-            coords={coords}
-            href={href}
-            alt={alt}
-            onClick={handleSelected}
-         />
-         {/* <rect
-            onMouseOver={() => handler.current.set(coords)}
-            id={`pixel-${x}-${y}`}
-            className="pixel-cell"
-            x={x}
-            y={y}
-            width={`${size}px`}
-            height={`${size}px`}
-            fill="none"
-            stroke="black"
-            style={{ top: `${y}px`, left: `${x}px`, position: 'absolute' }}
-            onClick={handleSelected}
-         /> */}
-      </>
+      <area
+         shape={shape}
+         coords={coords}
+         href="#"
+         alt={alt}
+         onClick={handleSelected}
+         onMouseOver={() => handler.current.set(coords)}
+      />
    );
 }
